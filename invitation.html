@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Love Card</title>
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(to right, #000000, #000000);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+        
+        .card-container {
+            width: 420px;
+            height: 280px;
+            perspective: 1000px;
+            cursor: pointer;
+            z-index: 1;
+        }
+        
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+        }
+        
+        .card-container.open .card {
+            transform: rotateY(180deg);
+        }
+        
+        .card-side {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .card-front {
+            background-color: #FFD1DC;
+            color: #880e4f;
+            font-size: 36px;
+            font-family: 'Brush Script MT', cursive;
+        }
+        
+        .card-back {
+            background-color: #fff;
+            color: #333;
+            transform: rotateY(180deg);
+            flex-direction: column;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        
+        .photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 3px solid #c2185b;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        /* Buttons */
+        
+        .btn {
+            margin: 6px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .yes {
+            background: linear-gradient(45deg, #ff7eb9, #ff758c);
+            color: white;
+        }
+        
+        .yes:hover {
+            transform: scale(1.1) rotate(-2deg);
+            box-shadow: 0 6px 15px rgba(255, 126, 185, 0.5);
+        }
+        
+        .no {
+            background: linear-gradient(45deg, #ff9472, #f27059);
+            color: white;
+            position: absolute;
+            top: 40px;
+            left: 150px;
+            border: 2px solid white;
+            z-index: 10;
+        }
+        
+        .no:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 6px 15px rgba(242, 112, 89, 0.5);
+        }
+        
+        .my {
+            background: linear-gradient(45deg, #d4145a, #fbb03b);
+            color: white;
+        }
+        
+        .my:hover {
+            transform: scale(1.1) rotate(-2deg);
+            box-shadow: 0 6px 15px rgba(219, 20, 90, 0.5);
+        }
+        /* Popup */
+        
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #c2185b;
+            display: none;
+            z-index: 20;
+            transition: all 0.3s ease;
+        }
+        
+        .popup img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-top: 10px;
+            border: 3px solid #c2185b;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        /* Floating hearts */
+        
+        .heart {
+            position: fixed;
+            font-size: 24px;
+            animation: floatUp 2s linear forwards;
+            z-index: 19;
+        }
+        
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-150px);
+                opacity: 0;
+            }
+        }
+        /* Falling flowers */
+        
+        .flower {
+            position: absolute;
+            top: 0;
+            width: 32px;
+            height: 32px;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/415/415733.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: fall 10s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card-container" onclick="flipCard()">
+        <div class="card">
+            <div class="card-side card-front">
+                Hello,Click Me!💌
+            </div>
+            <div class="card-side card-back">
+                <div style="position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <img src="my2.jpg" alt="Our Photo" class="photo">
+                    <h2>Miss me?</h2>
+                    <div style="margin-top: 10px; position: relative; width: 250px; height: 120px;">
+                        <button class="btn yes" onclick="event.stopPropagation(); replyYes()">Yes</button>
+                        <button class="btn no" id="noBtn" onmouseover="moveNoBtn()">No</button>
+                        <button class="btn my" onclick="event.stopPropagation(); replyMy()">My Button</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup -->
+    <div class="popup" id="popup"></div>
+
+    <script>
+        function flipCard() {
+            document.querySelector('.card-container').classList.toggle('open');
+        }
+
+        // Yes button popup + hearts
+        function replyYes() {
+            const popup = document.getElementById("popup");
+            popup.innerHTML = "Yay! You love me ❤️😘";
+            popup.style.display = "block";
+            setTimeout(() => popup.style.display = "none", 2000);
+
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement("div");
+                    heart.classList.add("heart");
+                    heart.innerHTML = "❤️";
+                    heart.style.left = (window.innerWidth / 2 + Math.random() * 100 - 50) + "px";
+                    heart.style.top = (window.innerHeight / 2) + "px";
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 2000);
+                }, i * 200);
+            }
+        }
+
+        // "My Button" shows popup with photo + hearts + download
+        function replyMy() {
+            const popup = document.getElementById("popup");
+            const photoSrc = "my.jpg"; // change to your photo
+            popup.innerHTML = `
+      You clicked my special button 💖<br>
+      <img src="${photoSrc}" alt="My Photo"><br>
+      <button id="downloadBtn" class="btn my" style="margin-top:10px;">Download Photo</button>
+    `;
+            popup.style.display = "block";
+
+            // Floating hearts
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement("div");
+                    heart.classList.add("heart");
+                    heart.innerHTML = "💖";
+                    heart.style.left = (window.innerWidth / 2 + Math.random() * 100 - 50) + "px";
+                    heart.style.top = (window.innerHeight / 2) + "px";
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 2000);
+                }, i * 200);
+            }
+
+            // Download functionality
+            document.getElementById("downloadBtn").onclick = () => {
+                const link = document.createElement("a");
+                link.href = photoSrc;
+                link.download = "MyPhoto.jpg";
+                link.click();
+            };
+
+            setTimeout(() => popup.style.display = "none", 4000);
+        }
+
+        // No button runs away
+        function moveNoBtn() {
+            const noBtn = document.getElementById("noBtn");
+            const container = noBtn.parentElement;
+            const maxX = container.clientWidth - noBtn.offsetWidth;
+            const maxY = container.clientHeight - noBtn.offsetHeight;
+            const x = Math.floor(Math.random() * maxX);
+            const y = Math.floor(Math.random() * maxY);
+            noBtn.style.left = x + "px";
+            noBtn.style.top = y + "px";
+        }
+
+        // Falling flowers
+        function createFlower() {
+            const flower = document.createElement('div');
+            flower.classList.add('flower');
+            flower.style.left = Math.random() * window.innerWidth + 'px';
+            flower.style.animationDuration = (5 + Math.random() * 5) + 's';
+            flower.style.animationDelay = Math.random() * 3 + 's';
+            document.body.appendChild(flower);
+            setTimeout(() => flower.remove(), 10000);
+        }
+        setInterval(createFlower, 800);
+    </script>
+
+</body>
+
+</html>
